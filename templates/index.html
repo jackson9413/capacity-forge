@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>capacity-forge &mdash; capacity &amp; SLO planning workbench</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo">&#9672;</span>
+    <div class="brand-text">
+      <h1>capacity-forge</h1>
+      <p class="tag">Paste a service brief. Get fleet sizing, queueing math, SLO fit, connection-pool sizing,
+      cost per million requests and a prioritised fix plan.</p>
+    </div>
+  </div>
+  <div class="top-right">
+    <span id="engine-badge" class="badge">loading</span>
+    <button id="btn-analyze" class="primary">Analyze capacity</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="col-left">
+    <div class="card">
+      <div class="card-head"><h2>Service brief</h2></div>
+      <textarea id="brief" spellcheck="false" placeholder="Paste the brief here. Plain prose is fine:
+
+Checkout API for a flash sale. Peak traffic hits 1200 rps, average is 120 rps.
+We run 8 instances and autoscale between 8 and 20. Each instance is 2 vCPU with 8 GB ram,
+max concurrency 200. CPU cost is 14 ms per request. p50 120ms, p99 900ms, budget 500ms.
+3 downstream calls at 180ms total. 4 db reads and 2 writes per request at 8ms.
+Cache hit ratio 30%. Target 99.9% uptime, error rate 0.4%. 3 AZ, 1 region."></textarea>
+      <div class="row">
+        <select id="sample-select"><option value="">Load a sample brief...</option></select>
+        <span class="hint" id="hint">Everything the parser misses can be corrected in &ldquo;Detected inputs&rdquo; and re-run.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Detected inputs</h2>
+        <button id="toggle-fields" class="ghost small">collapse</button>
+      </div>
+      <div id="fields-grid" class="fields-grid"><p class="hint">Run an analysis to see the parsed values.</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>History</h2><span id="history-count" class="hint"></span></div>
+      <div id="history"><p class="hint">No saved runs yet.</p></div>
+    </div>
+  </section>
+
+  <section class="col-right">
+    <div id="results">
+      <div class="card empty">
+        <h3>Nothing analysed yet</h3>
+        <p>Paste a brief on the left, or load one of the samples, then press <strong>Analyze capacity</strong>.</p>
+        <p class="hint">Everything runs locally: Little's Law, an M/M/c Erlang-C queue, an empirical tail-amplification
+        curve, an availability error budget and a connection-pool model. No API keys, no network calls.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
